@@ -1,5 +1,7 @@
 # Проектная работа "Веб-ларек"
 
+Интернет-магазин товаров для веб-разработчиков
+
 Стек: HTML, SCSS, TS, Webpack
 
 Структура проекта:
@@ -45,15 +47,86 @@ npm run build
 yarn build
 ```
 
+## Структура проекта
+
+src/
+├── api/ # Работа с API
+│ └── ApiClient.ts # Клиент для работы с сервером
+├── types/ # Типы данных
+│ └── types.ts # Основные типы приложения
+├── scss/ # Стили
+└── index.ts # Точка входа
+
+### Архитектурные слои
+
 ## Типизация данных
 
-### Основные типы
+### Типы данных
 
-- `Product`: Описание товара (id, title, price и др.).
-- `Order`: Данные заказа (адрес, email, список товаров).
-- `CartItem`: Товар в корзине (продукт + количество).
+Основные типы в `src/types/types.ts`:
 
-### События
+```ts
+interface Product {
+	id: string;
+	title: string;
+	price: number | null;
+	description: string;
+	category: string;
+	image: string;
+}
 
-- `cart:add` - добавление товара в корзину.
-- `order:submit` - оформление заказа.
+interface ApiResponse<T> {
+	success: boolean;
+	data: T;
+	error?: string;
+}
+```
+
+## API Клиент
+
+Класс ApiClient (src/api/ApiClient.ts)
+
+```ts
+class ApiClient {
+	// @param baseUrl - Базовый URL API
+	constructor(private baseUrl: string) {}
+
+	// Загружает список товаров
+
+	async getProductList(): Promise<ApiResponse<Product[]>> {
+		try {
+			const response = await fetch(`${this.baseUrl}/product`);
+			const data = await response.json();
+			return { success: true, data };
+		} catch (error) {
+			return {
+				success: false,
+				data: [],
+				error: error instanceof Error ? error.message : 'Unknown error',
+			};
+		}
+	}
+}
+```
+
+## Архитектурные решения
+
+Принципы проектирования
+
+1. Разделение ответственности:
+
+   - API-логика изолирована в ApiClient
+
+   - Типы данных вынесены отдельно
+
+2. Слабая связанность:
+
+   - Компоненты зависят только от типов
+
+   - Нет прямых зависимостей между слоями
+
+3. Типобезопасность:
+
+   - Полная типизация всех данных
+
+   - Проверка типов при сборке

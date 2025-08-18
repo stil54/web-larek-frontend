@@ -1,16 +1,13 @@
-import { Product, Order } from './api';
+import { OrderRequest, Product } from './api';
+import { CartItem } from './models';
 
-// Все возможные события
-export type EventName = 
-  | 'catalog:update' 
-  | 'cart:add' 
-  | 'cart:remove'
-  | 'order:submit';
+export type EventName =
+  | 'cart:update'
+  | 'order:submit'
+  | 'product:open';
 
-// Данные для каждого события
-export interface EventData {
-  'catalog:update': Product[];
-  'cart:add': { product: Product };
-  'cart:remove': { productId: string };
-  'order:submit': Order;
+export interface EventPayload {
+  'cart:update': CartItem[];
+  'order:submit': OrderRequest;
+  'product:open': Product;
 }

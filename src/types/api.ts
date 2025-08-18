@@ -1,11 +1,3 @@
-// Ответ сервера для любых запросов
-export interface ApiResponse<T> {
-    success: boolean;
-    data: T;
-    error?: string;
-}
-
-// Товар
 export interface Product {
     id: string;
     title: string;
@@ -15,12 +7,22 @@ export interface Product {
     image: string;
 }
 
-// Данные заказа
-export interface Order {
-    payment: 'online' | 'offline';
+export interface OrderRequest {
+    payment: 'card' | 'cash';
     email: string;
     phone: string;
     address: string;
     total: number;
     items: string[];
+}
+
+export interface OrderResponse {
+    id: string;
+    total: number;
+}
+
+export interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+    error?: string;
 }

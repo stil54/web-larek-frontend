@@ -1,14 +1,12 @@
-import { Product, Order } from './api';
+import { Product, OrderRequest } from './api';
 
-// Элемент корзины
 export interface CartItem {
     product: Product;
     quantity: number;
 }
 
-// Глобальное состояние приложения
 export interface AppState {
     catalog: Product[];
     cart: CartItem[];
-    order: Partial<Order>;
+    order: Partial<OrderRequest>;
 }
