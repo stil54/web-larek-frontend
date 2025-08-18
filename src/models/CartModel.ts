@@ -1,6 +1,5 @@
 import { Product, CartItem } from '../types';
 
-import { ApiResponse } from '../types/api';
 
 export class CartModel {
     private items: CartItem[] = [];
