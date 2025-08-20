@@ -1,14 +1,31 @@
-import { Product, OrderRequest } from './api';
+export interface IProduct {
+    id: string;
+    title: string;
+    description: string;
+    image: string;
+    category: string;
+    price: number | null;
+}
 
-// Описывает товар в корзине с учётом количества.
-export interface CartItem {
-    product: Product;
+export interface ICartItem {
+    productId: string;
     quantity: number;
 }
 
-// Глобальное состояние приложения
-export interface AppState {
-    catalog: Product[];              // Все товары из каталога
-    cart: CartItem[];               // Товары в корзине
-    order: Partial<OrderRequest>;   // Данные заказа
+export interface ICartItemDetailed extends ICartItem {
+    product?: IProduct;
+    price: number;
+}
+
+export interface ICartState {
+    items: ICartItemDetailed[];
+    total: number;
+    count: number;
+}
+
+export interface IAppState {
+    products: IProduct[];
+    cart: ICartState;
+    loading: boolean;
+    error?: string;
 }
