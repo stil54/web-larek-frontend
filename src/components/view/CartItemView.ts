@@ -7,6 +7,7 @@ export class CartItemView extends Component<IProduct> {
   protected titleEl: HTMLElement;
   protected priceEl: HTMLElement;
   protected removeButton: HTMLButtonElement;
+  private product: IProduct;
 
   constructor(
     template: HTMLTemplateElement,
@@ -21,9 +22,9 @@ export class CartItemView extends Component<IProduct> {
     this.priceEl = element.querySelector(".card__price")!;
     this.removeButton = element.querySelector(".basket__item-delete")!;
 
-    if (actions?.onClick) {
-      this.removeButton.addEventListener("click", actions.onClick);
-    }
+    this.removeButton.addEventListener("click", () => {
+      this.events.emit("cart:item:remove", { productId: this.product.id });
+    });
   }
 
   private formatPrice(price: number | null): string {
@@ -31,6 +32,7 @@ export class CartItemView extends Component<IProduct> {
   }
 
   renderCartItem(data: IProduct, index: number): HTMLElement {
+    this.product = data;
     this.setText(this.indexEl, String(index));
     this.setText(this.titleEl, data.title);
     this.setText(this.priceEl, this.formatPrice(data.price));

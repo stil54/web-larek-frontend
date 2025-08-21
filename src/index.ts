@@ -61,6 +61,7 @@ const catalogPresenter = new CatalogPresenter(
   events,
   catalogModel,
   api,
+  cartModel,
   catalogView,
   productCardTemplate,
   productDetailsTemplate

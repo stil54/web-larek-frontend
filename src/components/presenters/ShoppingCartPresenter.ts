@@ -15,10 +15,12 @@ export class ShoppingCartPresenter {
     private modal: ModalView
   ) {
     // Добавление товара в корзину
-    this.events.on("cart:item:add", () => {
-      this.cartModel.addProduct(this.catalogModel.selectedProduct);
-      this.cartView.renderHeaderCartCounter(this.cartModel.getItemCount());
-      this.modal.close();
+    this.events.on("cart:item:add", (data: { product: IProduct }) => {
+      if (!this.cartModel.hasProduct(data.product.id)) {
+        this.cartModel.addProduct(data.product);
+        this.cartView.renderHeaderCartCounter(this.cartModel.getItemCount());
+      }
+      // this.modal.close();
     });
 
     // Открытие корзины
@@ -29,15 +31,29 @@ export class ShoppingCartPresenter {
     });
 
     // Удаление товара из корзины
-    this.events.on("cart:item:remove", (item: IProduct) => {
-      this.cartModel.removeProduct(item);
+    this.events.on("cart:item:remove", (data: { productId: string }) => {
+      this.cartModel.removeProduct(data.productId);
+      this.cartView.renderHeaderCartCounter(this.cartModel.getItemCount());
+      this.events.emit("cart:item:state", {
+        productId: data.productId,
+        inCart: false
+      });
     });
 
     // Обновление корзины после изменений
-    this.events.on("cart:changed", (products: IProduct[]) => {
-      this.cartView.renderHeaderCartCounter(this.cartModel.getItemCount());
-      this.cartView.renderTotal(this.cartModel.getTotal());
-      this.cartView.updateCartItems(this.cartModel.products, this.cartItemTemplate);
+    this.events.on("cart:changed", (data: { products: IProduct[]; count: number; total: number }) => {
+      this.cartView.renderHeaderCartCounter(data.count);
+      this.cartView.renderTotal(data.total);
+      this.cartView.updateCartItems(data.products, this.cartItemTemplate);
+    });
+
+    // Обработчик для проверки состояния товара
+    this.events.on("cart:check:item", (data: { productId: string }) => {
+      const isInCart = this.cartModel.hasProduct(data.productId);
+      this.events.emit("cart:item:state", {
+        productId: data.productId,
+        inCart: isInCart
+      });
     });
   }
 }

@@ -47,12 +47,10 @@ export class ShoppingCartView extends Component<HTMLElement> implements IShoppin
 
   updateCartItems(products: IProduct[], template: HTMLTemplateElement): void {
     const cartItems = products.map((item, index) => {
-      const cartItem = new CartItemView(template, this.events, {
-        onClick: () => this.events.emit("cart:item:remove", item),
-      });
+      const cartItem = new CartItemView(template, this.events);
       return cartItem.renderCartItem(item, index + 1);
     });
-    
+
     this.items = cartItems;
   }
 

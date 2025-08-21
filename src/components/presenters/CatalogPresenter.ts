@@ -5,12 +5,14 @@ import { ProductDetailsView } from "../view/ProductDetailsView";
 import { CatalogView } from "../view/CatalogView";
 import { ProductItemView } from "../view/ProductItemView";
 import { IProduct } from "../../types";
+import { ShoppingCartModel } from '../model/ShoppingCartModel';
 
 export class CatalogPresenter {
   constructor(
     private events: IEvents,
     private model: ProductCollectionModel,
     private api: WebLarekApi,
+    private cartModel: ShoppingCartModel,
     private catalogView: CatalogView,
     private cardTemplate: HTMLTemplateElement,
     private previewTemplate: HTMLTemplateElement
@@ -30,8 +32,9 @@ export class CatalogPresenter {
 
     // Открытие карточки в модалке
     this.events.on("modalCard:open", (item: IProduct) => {
+      const isInCart = this.cartModel.hasProduct(item.id);
       const details = new ProductDetailsView(this.previewTemplate, this.events);
-      this.events.emit("modal:open", details.render(item));
+      this.events.emit("modal:open", details.render(item, isInCart));
     });
     
     // Обработчик выбора товара для просмотра
